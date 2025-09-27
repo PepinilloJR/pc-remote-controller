@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "gbhUAf3/Wgl3fXL2WBfZWSke3Yq7TtGbnheC1U9SWrhFRFdeWyFqCtZL0ET/1aCHaRoKcPSLZtNKendUnsDkNA==",
+  "success": true,
+  "projectFilePath": "/home/pepinillojr/proyectos/pc-remote-controller/server/Server.csproj",
+  "expectedPackageFiles": [
+    "/home/pepinillojr/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.20/microsoft.aspnetcore.app.ref.8.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}
