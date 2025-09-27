@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gbhUAf3/Wgl3fXL2WBfZWSke3Yq7TtGbnheC1U9SWrhFRFdeWyFqCtZL0ET/1aCHaRoKcPSLZtNKendUnsDkNA==",
+  "dgSpecHash": "VqPXlMhLlpvePx5QBrmEus9DtcCH96eQW2qIVO3WmC2JLPBOqDBHmEtcXyxp9mqRS7V8NAEI+GarPbTp8T1WHQ==",
   "success": true,
-  "projectFilePath": "/home/pepinillojr/proyectos/pc-remote-controller/server/Server.csproj",
-  "expectedPackageFiles": [
-    "/home/pepinillojr/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.20/microsoft.aspnetcore.app.ref.8.0.20.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\Users\\pepin\\OneDrive\\Escritorio\\pc-remote-controller\\server\\Server.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
