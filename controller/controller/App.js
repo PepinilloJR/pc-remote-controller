@@ -1,10 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import TcpSocket from 'react-native-tcp-socket';
 export default function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
+      <Button title='Mover' onPress={() => {
+        client.write("hola")
+        client.destroy()
+      }}></Button>
       <StatusBar style="auto" />
     </View>
   );
@@ -23,9 +27,9 @@ const client = TcpSocket.createConnection(options, () => {
   // Write on the socket
   // Close socket
   
-  client.write("hola")
+  //client.write("hola")
 
-  client.destroy()
+  //client.destroy()
 });
 
 client.on('data', function(data) {

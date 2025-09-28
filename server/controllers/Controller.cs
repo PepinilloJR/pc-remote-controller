@@ -4,9 +4,9 @@ namespace Controller
     {
         public string getType();
 
-        public void MoveMouse(string direction);
+        public static void MoveMouse(string direction) { }
 
-        public void WriteText(string input);
+        public static void WriteText(string input) { }
     }
 
 }

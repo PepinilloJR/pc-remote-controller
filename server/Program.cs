@@ -13,7 +13,7 @@ namespace main
         {
             Server server = new Server(8000);
 
-            WindowsController.SetCursorPos(50, 50);
+            WindowsController.MoveMouse("right");
 
             Socket cliente = server.createSocket().bind().listen().awaitConnection();
 

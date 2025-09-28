@@ -5,20 +5,20 @@ namespace Controller
     {
         public string getType()
         {
-            return "linuxController";
+            return "LinuxController";
         }
 
-        public void WriteText()
+        public static void WriteText()
         {
 
         }
 
-        public void WriteText(string input)
+        public static void WriteText(string input)
         {
 
         }
 
-        public void MoveMouse(string direction)
+        public static void MoveMouse(string direction)
         {
             
         }
