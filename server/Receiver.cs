@@ -20,7 +20,8 @@ namespace Reception
 
             int bytesRead = client.Receive(buffer);
 
-            string message = Encoding.UTF8.GetString(buffer);
+            string crude = Encoding.UTF8.GetString(buffer);
+            string message = crude.TrimEnd('\r', '\n', '\0');
 
             return message; 
         }

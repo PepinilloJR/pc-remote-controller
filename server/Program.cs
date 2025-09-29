@@ -13,17 +13,19 @@ namespace main
         {
             Server server = new Server(8000);
 
-            WindowsController.MoveMouse("right");
-
             Socket cliente = server.createSocket().bind().listen().awaitConnection();
 
             Console.WriteLine("conexion iniciada");
 
             Receiver receiver = new Receiver(cliente);
 
-            string mensaje = receiver.listen();
 
-            Console.WriteLine(mensaje);
+            while (true)
+            {
+                string mensaje = receiver.listen();
+                WindowsController.MoveMouse(mensaje);
+                WindowsController.ClickMouse(mensaje);
+            }
         
 
         }
