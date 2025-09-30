@@ -4,7 +4,6 @@ import TcpSocket from 'react-native-tcp-socket';
 
 export const sendMessage = (message) => {
     try {
-        console.log('guh')
         client.write(message)
 
     } catch (error) {

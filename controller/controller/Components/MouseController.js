@@ -6,8 +6,9 @@ import { useRef } from 'react';
 export function MouseController() {
 
     const intervalRef = useRef(null)
+    const clickStatus = useRef({})
 
-    const send = (message) => {
+    const sendMouseMovement = (message) => {
         sendMessage(message)
 
         // to avoid potential floating timer on user double click
@@ -16,11 +17,49 @@ export function MouseController() {
         if (intervalRef.current) clearTimeout(intervalRef.current);
 
 
-        intervalRef.current = setTimeout(() => {send(message)}, 50);
+        intervalRef.current = setTimeout(() => {sendMouseMovement(message)}, 50);
     }
 
-    const stopTimer = () => {
+    const sendMouseClick = (message) => {
+
+        const status = {...clickStatus.current}
+
+        if (status[message] !== "hold") {
+            sendMessage(message)
+            status[message] = "click"
+        } else {
+            sendMessage(message + "_up")
+            status[message] = "up"
+        }
+
+        clickStatus.current = {...status}
+
+        // to avoid potential floating timer on user double click
+        if (intervalRef.current) clearTimeout(intervalRef.current);
+
+
+        intervalRef.current = setTimeout(() => {
+            const status_ = {...clickStatus.current}
+            status_[message] = "hold"
+            clickStatus.current = {...status_}
+            
+
+        }, 500);
+    }
+
+    const stopMouseMovement = () => {
         clearTimeout(intervalRef.current);
+    }
+
+    const stopMouseClick = (message) => {
+        const status = {...clickStatus.current}
+        
+        if (status[message] !== "hold") {
+            sendMessage(message + "_up")
+            status[message] = 'up'
+            clearTimeout(intervalRef.current);
+        } 
+        clickStatus.current = {...status}
     }
 
 
@@ -31,16 +70,16 @@ export function MouseController() {
 
 
             <View style={{ ...styles.buttonRow, width: "50%" }}>
-                <Pressable style={styles.button} onPressIn={() => send('up')} onPressOut={stopTimer}><Text style={styles.button}>Up</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={styles.button}>Up</Text></Pressable>
             </View>
 
             <View style={{ ...styles.buttonRow }}>
-                <Pressable style={styles.button} onPressIn={() => send('left')} onPressOut={stopTimer}><Text style={styles.button}>Left</Text></Pressable>
-                <Pressable style={styles.button} onPressIn={() => send('right')} onPressOut={stopTimer}><Text style={styles.button}>Right</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('left')} onPressOut={stopMouseMovement}><Text style={styles.button}>Left</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={styles.button}>Right</Text></Pressable>
             </View>
 
             <View style={{ ...styles.buttonRow, width: "50%" }}>
-                <Pressable style={styles.button} onPressIn={() => send('down')} onPressOut={stopTimer}><Text style={styles.button}>Down</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={styles.button}>Down</Text></Pressable>
             </View>
         </View>
 
@@ -48,8 +87,8 @@ export function MouseController() {
 
 
             <View style={{ ...styles.buttonRow, width: "50%"}}>
-                <Pressable style={styles.button} onPressIn={() => send('left_click')} onPressOut={stopTimer}><Text style={styles.button}>Click 0</Text></Pressable>
-                <Pressable style={styles.button} onPressIn={() => send('right_click')} onPressOut={stopTimer}><Text style={styles.button}>Click 1</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseClick('left_click')} onPressOut={() => {stopMouseClick('left_click')}}><Text style={styles.button}>Click 0</Text></Pressable>
+                <Pressable style={styles.button} onPressIn={() => sendMouseClick('right_click')} onPressOut={() => {stopMouseClick('right_click')}}><Text style={styles.button}>Click 1</Text></Pressable>
 
             </View>
 

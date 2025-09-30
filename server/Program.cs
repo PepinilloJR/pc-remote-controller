@@ -25,6 +25,12 @@ namespace main
                 string mensaje = receiver.listen();
                 WindowsController.MoveMouse(mensaje);
                 WindowsController.ClickMouse(mensaje);
+                if (mensaje.Length == 1)
+                {
+                    Console.WriteLine(mensaje);
+                    WindowsController.WriteText(mensaje.ToCharArray()[0]);
+                }
+
             }
         
 

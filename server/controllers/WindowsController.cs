@@ -57,7 +57,7 @@ namespace Controllers
         static extern bool GetMonitorInfo(IntPtr hMonitor, ref MONITORINFO lpmi);
 
         // for mouse clicking
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, UIntPtr dwExtraInfo);
         // events 
         private const uint MOUSEEVENTF_LEFTDOWN = 0x02;
@@ -65,6 +65,59 @@ namespace Controllers
         private const uint MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const uint MOUSEEVENTF_RIGHTUP = 0x10;
 
+        [StructLayout(LayoutKind.Sequential)] // atributes of the struct in memory will be in order of definition 
+        struct INPUT
+        {
+            public uint Type; // 2 is keyboard input
+            public MOUSEKEYBDHARDWAREINPUT Data;
+        }
+
+        [StructLayout(LayoutKind.Explicit)] // allows to control the position in memory of the fields
+        internal struct MOUSEKEYBDHARDWAREINPUT
+        {
+            // field offset indicates the position in memory inside the struct of the field, in a Explicit layout
+           
+            [FieldOffset(0)]  public HARDWAREINPUT Hardware;
+
+            [FieldOffset(0)] public KEYBDINPUT Keyboard; // i only use this
+
+            [FieldOffset(0)] public MOUSEINPUT Mouse;
+
+            // all this simulates an union, the API will use only one of the values depending in the Type flag on INPUT
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct HARDWAREINPUT
+        {
+            public uint Msg;
+            public ushort ParamL;
+            public ushort ParamH;
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct KEYBDINPUT
+        {
+            // importante note: ushort for WORD and uint for DWORD. -> documentation equivalent on C++
+
+            public ushort Vk; 
+            public ushort Scan;
+            public uint Flags; // putting this 0x0004 will allow to send unicode chars directly into scan, instead of using Virtual-Key Codes
+            public uint Time;
+            public IntPtr ExtraInfo;
+        }
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct MOUSEINPUT
+        {
+            public int X;
+            public int Y;
+            public uint MouseData;
+            public uint Flags;
+            public uint Time;
+            public IntPtr ExtraInfo;
+        }
+
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern uint SendInput(uint numberOfInputs, INPUT[] inputs, int sizeOfInputStructure);
 
         public string getType()
         {
@@ -76,8 +129,18 @@ namespace Controllers
 
         }
 
-        public static void WriteText(string input)
+        public static void WriteText(char input)
         {
+            INPUT ex = new INPUT();
+            INPUT[] exampleInput = { ex };
+            exampleInput[0].Type = 1;
+            exampleInput[0].Data.Keyboard.Vk = 0;
+            exampleInput[0].Data.Keyboard.Flags = 0x0004;
+            exampleInput[0].Data.Keyboard.Scan = input; // char can directly be converted to unicode 
+            exampleInput[0].Data.Keyboard.ExtraInfo = IntPtr.Zero;
+            exampleInput[0].Data.Keyboard.Time = 0;
+            Console.WriteLine(input);
+            SendInput(1, exampleInput, Marshal.SizeOf(typeof (INPUT)));
 
         }
 
@@ -148,12 +211,19 @@ namespace Controllers
             if (button.Equals("left_click"))
             {
                 mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)pt.x, (uint)pt.y, 0, 0);
-                mouse_event(MOUSEEVENTF_LEFTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
             } else if (button.Equals("right_click"))
             {
                 mouse_event(MOUSEEVENTF_RIGHTDOWN, (uint)pt.x, (uint)pt.y, 0, 0);
+
+            } else if (button.Equals("right_click_up"))
+            {
                 mouse_event(MOUSEEVENTF_RIGHTUP, (uint)pt.x, (uint)pt.y, 0, 0);
+
+            }
+            else if (button.Equals("left_click_up"))
+            {
+                mouse_event(MOUSEEVENTF_LEFTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
             }
         }
