@@ -88,6 +88,7 @@ namespace ServerController
         }
 
 
+
         public Socket awaitConnection()
         {
             Console.WriteLine("Waiting for connection with controller on " + this.ipEndPoint.Address + ":" + this.ipEndPoint.Port + "...");
@@ -96,6 +97,12 @@ namespace ServerController
 
             return client;
 
+        }
+
+        public void Close()
+        {
+            this.socket.Close();
+            this.socket.Dispose();
         }
 
     }

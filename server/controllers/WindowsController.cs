@@ -144,6 +144,23 @@ namespace Controllers
 
         }
 
+        public static void WriteTextSpecial(string input)
+        {
+            INPUT ex = new INPUT();
+            INPUT[] exampleInput = { ex };
+            exampleInput[0].Type = 1;
+
+            Enum.TryParse(input, out VirtualKeys vk);
+            exampleInput[0].Data.Keyboard.Vk = ((char)vk);
+            exampleInput[0].Data.Keyboard.Flags = 0;
+            exampleInput[0].Data.Keyboard.Scan = 0; // char can directly be converted to unicode 
+            exampleInput[0].Data.Keyboard.ExtraInfo = IntPtr.Zero;
+            exampleInput[0].Data.Keyboard.Time = 0;
+            Console.WriteLine(input);
+            SendInput(1, exampleInput, Marshal.SizeOf(typeof(INPUT)));
+
+        }
+
         public static void MoveMouse(string direction)
         {
             GetCursorPos(out POINT pt);
@@ -161,6 +178,7 @@ namespace Controllers
             Console.WriteLine(direction);
             */
 
+            Console.WriteLine(direction);
             // probably better to do this from the client
             if (lastInput.Equals(direction))
             {

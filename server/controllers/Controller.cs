@@ -8,6 +8,8 @@ namespace Controller
 
         public static void WriteText(string input) { }
 
+        public static void WriteTextSpecial(string input) { }
+
         public static void ClickMouse(string input) { }
     }
 

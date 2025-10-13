@@ -60,7 +60,7 @@ export function MouseController() {
             clearTimeout(intervalRef.current);
         } 
         clickStatus.current = {...status}
-    }
+    }       
 
 
 

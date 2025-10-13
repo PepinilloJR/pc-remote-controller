@@ -13,13 +13,19 @@ export function KeyboardController () {
     }, [currentText]) 
 
     const sendChar = (text) => {
-        console.log(text[text.length - 1])
-        sendMessage(text[text.length - 1])
-    }
-
+        console.log(text)
+        if (text.length === 1) {
+            sendMessage(text)
+        } else {
+            sendMessage("special"+text)
+        }
+    } 
+    //onChangeText={setCurrentText} 
     return <View style={styles.container}>
-        <TextInput onChangeText={setCurrentText}></TextInput>
+        <TextInput onKeyPress={({nativeEvent}) => {sendChar(nativeEvent.key)}} onSubmitEditing={() => {sendChar('Enter')}} ></TextInput>
     </View>
+
+
 
 
 }

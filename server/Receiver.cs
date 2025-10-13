@@ -14,16 +14,34 @@ namespace Reception
 
         public Receiver (Socket c) {  client = c; } 
 
-        public string listen()
+        async public Task<String> listen(CancellationToken token)
         {
             byte[] buffer = new byte[1024];
 
-            int bytesRead = client.Receive(buffer);
+            int bytesRead = await client.ReceiveAsync(buffer, token);
 
-            string crude = Encoding.UTF8.GetString(buffer);
-            string message = crude.TrimEnd('\r', '\n', '\0');
+            if (bytesRead <= 0)
+                return string.Empty;
 
+            string crude = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            string[] messages = crude.TrimEnd('\r', '\n', '\0').Split('|');
+            string message = messages[messages.Length - 1];
             return message; 
+        }
+
+        // method to mantain client connected (power cable uplogged?)
+        public void keepAlive(Socket clientSocket)
+        {
+            try
+            {
+                byte[] buffer = new byte[1024];
+                buffer = Encoding.UTF8.GetBytes("check");
+                clientSocket.Send(buffer);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
 
