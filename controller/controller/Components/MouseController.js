@@ -1,7 +1,7 @@
 import { Button, View, StyleSheet, Touchable, Pressable, Text } from 'react-native';
 import { sendMessage, stopMessage } from '../Services/ControllerService';
 import { useRef } from 'react';
-
+import { botoneras } from '../styles/styles';
 
 export function MouseController() {
 
@@ -66,39 +66,48 @@ export function MouseController() {
 
     return <>
 
-        <View style={styles.container}>
+        <View style={{...botoneras.container, top: 80, height: 250}}>
 
 
-            <View style={{ ...styles.buttonRow, width: "50%" }}>
-                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={styles.button}>Up</Text></Pressable>
+            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center'}}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Up</Text></Pressable>
             </View>
 
-            <View style={{ ...styles.buttonRow }}>
-                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('left')} onPressOut={stopMouseMovement}><Text style={styles.button}>Left</Text></Pressable>
-                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={styles.button}>Right</Text></Pressable>
+            <View style={{ ...botoneras.buttonRowSeparated }}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('left')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Left</Text></Pressable>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Right</Text></Pressable>
             </View>
 
-            <View style={{ ...styles.buttonRow, width: "50%" }}>
-                <Pressable style={styles.button} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={styles.button}>Down</Text></Pressable>
+            <View style={{ ...botoneras.buttonRowSeparated,  justifyContent: 'center' }}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Down</Text></Pressable>
             </View>
         </View>
 
-        <View style={{...styles.container, top: 450, height: "10%"}}>
+        <View style={{...botoneras.container, top: 350}}>
 
 
-            <View style={{ ...styles.buttonRow, width: "50%"}}>
-                <Pressable style={styles.button} onPressIn={() => sendMouseClick('left_click')} onPressOut={() => {stopMouseClick('left_click')}}><Text style={styles.button}>Click 0</Text></Pressable>
-                <Pressable style={styles.button} onPressIn={() => sendMouseClick('right_click')} onPressOut={() => {stopMouseClick('right_click')}}><Text style={styles.button}>Click 1</Text></Pressable>
+            <View style={{ ...botoneras.buttonRow}}>
+                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('left_click')} onPressOut={() => {stopMouseClick('left_click')}}><Text style={botoneras.buttonText}>Click 0</Text></Pressable>
+                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('right_click')} onPressOut={() => {stopMouseClick('right_click')}}><Text style={botoneras.buttonText}>Click 1</Text></Pressable>
 
             </View>
 
+        </View>
+
+        <View style={{ ...botoneras.container, top: 650, left: 20, height: 220, width: 60 }}>
+            <View style={{ ...botoneras.buttonRow}}>
+                <Pressable style={{...botoneras.buttonSeparated, height: 100, width: 60}} onPressIn={() => sendMouseClick('wheel_up')}><Text style={botoneras.buttonText}>W_UP</Text></Pressable>
+            </View>
+            <View style={{ ...botoneras.buttonRow }}>
+                <Pressable style={{...botoneras.buttonSeparated, height: 100, width: 60}} onPressIn={() => sendMouseClick('wheel_down')}><Text style={botoneras.buttonText}>W_DOWN</Text></Pressable>
+            </View>
         </View>
 
     </>
 
 }
 
-const styles = StyleSheet.create({
+const styles2 = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 80,

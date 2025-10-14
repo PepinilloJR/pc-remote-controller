@@ -4,13 +4,14 @@ import TcpSocket from 'react-native-tcp-socket';
 import { MouseController } from './Components/MouseController';
 import { KeyboardController } from './Components/KeyboardController';
 import { CommonController } from './Components/CommonController';
+import { VolumeController } from './Components/VolumeController';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
       <MouseController></MouseController>
       <KeyboardController></KeyboardController>
       <CommonController></CommonController>
+      <VolumeController></VolumeController>
       <StatusBar style="auto" />
     </View>
   );

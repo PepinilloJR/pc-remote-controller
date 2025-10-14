@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -58,12 +59,13 @@ namespace Controllers
 
         // for mouse clicking
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
-        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, UIntPtr dwExtraInfo);
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint wData, UIntPtr dwExtraInfo);
         // events 
         private const uint MOUSEEVENTF_LEFTDOWN = 0x02;
         private const uint MOUSEEVENTF_LEFTUP = 0x04;
         private const uint MOUSEEVENTF_RIGHTDOWN = 0x08;
         private const uint MOUSEEVENTF_RIGHTUP = 0x10;
+        private const uint MOUSEEVENTF_WHEEL = 0x0800;
 
         [StructLayout(LayoutKind.Sequential)] // atributes of the struct in memory will be in order of definition 
         struct INPUT
@@ -119,14 +121,11 @@ namespace Controllers
         [DllImport("user32.dll", SetLastError = true)]
         private static extern uint SendInput(uint numberOfInputs, INPUT[] inputs, int sizeOfInputStructure);
 
+
+
         public string getType()
         {
             return "WindowsController";
-        }
-
-        public static void WriteText()
-        {
-
         }
 
         public static void WriteText(char input)
@@ -243,6 +242,28 @@ namespace Controllers
             {
                 mouse_event(MOUSEEVENTF_LEFTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
+            } else if (button.Contains("wheel_up"))
+            {
+                Console.WriteLine("Llego aca");
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 50, 0);
+            }
+            else if (button.Contains("wheel_down"))
+            {
+                Console.WriteLine("Llego aca");
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (unchecked((uint)(-120))), 0);
+            }
+        }
+
+        public static void VolumenChange (string vol_dir)
+        {
+            // this bifurcation is redundant, but later on will make sense when direct volume control being implemented so idk :b
+            if (vol_dir == "vol_up")
+            {
+                WriteTextSpecial(vol_dir);
+
+            } else if (vol_dir == "vol_down")
+            {
+                WriteTextSpecial(vol_dir);
             }
         }
     }

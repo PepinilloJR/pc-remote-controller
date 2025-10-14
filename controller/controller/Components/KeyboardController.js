@@ -32,8 +32,9 @@ export function KeyboardController () {
 
 const styles = StyleSheet.create({
     container: {
+        position: 'absolute',
         width: 300,
-        top: 250,
+        top: 450,
         height: 'auto',
         backgroundColor: '#fff',
         alignItems: 'center',

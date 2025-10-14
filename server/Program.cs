@@ -62,6 +62,9 @@ namespace main
                         {
                             mensaje = mensaje.Replace("special", "");
                             WindowsController.WriteTextSpecial(mensaje);
+                        } else if (mensaje.Contains("vol"))
+                        {
+                            WindowsController.VolumenChange(mensaje);
                         }
                         else
                         {

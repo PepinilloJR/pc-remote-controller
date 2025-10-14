@@ -109,6 +109,9 @@ namespace Controller
         NumLock = 0x90,
         WinLeft = 0x5B,
         WinRight = 0x5C,
-        Menu = 0x5D
-    }
+        Menu = 0x5D,
+
+        vol_down = 0xAE,
+        vol_up = 0xAF
+}
 }
