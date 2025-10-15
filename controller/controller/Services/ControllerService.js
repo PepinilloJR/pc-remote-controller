@@ -15,62 +15,73 @@ export const sendMessage = (message) => {
 // messages buffer
 const messages = [];
 
-const options = {
-  port: 8000,
-  host: '192.168.100.3',
-  reuseAddress: true,
-  // localPort: 20000,
-  // interface: "wifi",
-};
+export let client;
 
-// Create socket
-const client = TcpSocket.createConnection(options, () => {
-  console.log("connection created")
-});
+export async function stopClient(setConnected) {
+  client.destroy()
+  setConnected(false)
 
-client.on('data', function (data) {
-  console.log('message was received', data);
-  //if (messages.length == 0) {
-  //  messages.push('alive')
-  //}
-});
+}
+
+export async function startClient(options, setConnected) {
+  // Create socket
+  client = TcpSocket.createConnection(options, () => {
+
+    console.log("connection created")
+  });
 
 
+  client.on('connect', function () {
+    setConnected(true)
+    const intervalSender = setInterval(() => {
+      const m = messages.pop()
+      if (m) {
+        client.write('|' + m)
+        clearTimeout(timeoutAlive)
+
+        timeoutAlive = setTimeout(() => {
+          if (messages.length == 0) {
+            messages.push('alive')
+          }
+        }, 5000)
+
+        console.log(m);
+      }
+
+    }, 1)
+
+    var timeoutAlive = setTimeout(() => {
+      if (messages.length == 0) {
+        messages.push('alive')
+      }
+    }, 5000)
+
+    client.on('data', function (data) {
+      console.log('message was received', data);
+
+    });
 
 
-client.on('connect', function () {
-  setInterval(() => {
-    const m = messages.pop()
-    if (m) {
-      client.write('|' + m)
+    client.on('error', function (error) {
+      console.log(error);
+      setConnected(false)
+    });
+
+    client.on('close', function () {
+      console.log('Connection closed!');
       clearTimeout(timeoutAlive)
-      
-      timeoutAlive = setTimeout(() => {
-        if (messages.length == 0) {
-          messages.push('alive')
-        }
-      }, 5000)
+      clearInterval(intervalSender)
+      setConnected(false)
+    });
+  })
 
-      console.log(m);
-    }
 
-  }, 1)
 
-  var timeoutAlive = setTimeout(() => {
-    if (messages.length == 0) {
-      messages.push('alive')
-    }
-  }, 5000)
-})
 
-/*
-*/
 
-client.on('error', function (error) {
-  console.log(error);
-});
 
-client.on('close', function () {
-  console.log('Connection closed!');
-});
+}
+
+
+
 

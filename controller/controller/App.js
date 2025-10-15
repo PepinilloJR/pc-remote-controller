@@ -5,15 +5,24 @@ import { MouseController } from './Components/MouseController';
 import { KeyboardController } from './Components/KeyboardController';
 import { CommonController } from './Components/CommonController';
 import { VolumeController } from './Components/VolumeController';
+import { useState } from 'react';
+import { ConnectMenu } from './Services/ConnectService';
+import { DangerousController } from './Components/DangerousController';
+
 export default function App() {
+
+  const [connected, setConnected] = useState(false)
+
   return (
+    connected ? 
     <View style={styles.container}>
       <MouseController></MouseController>
       <KeyboardController></KeyboardController>
       <CommonController></CommonController>
       <VolumeController></VolumeController>
+      <DangerousController setConnected={setConnected}></DangerousController>
       <StatusBar style="auto" />
-    </View>
+    </View> : <ConnectMenu setConnected={setConnected}></ConnectMenu>
   );
 }
 

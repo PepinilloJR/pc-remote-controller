@@ -51,3 +51,41 @@ export const botoneras = StyleSheet.create({
         textAlign: 'center'
     }
 });
+
+export const interfaz = StyleSheet.create({
+    container: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        backgroundColor: '#fff',
+
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textoView: {
+
+        backgroundColor: '#fff',
+        width: '100%',
+        justifyContent: 'center'
+    },
+
+    texto: {
+        textAlign: 'center',
+        fontSize: 25
+    },  
+
+    input: {
+        borderColor: 'gray',
+        borderWidth: 1,
+        width: '80%',
+        height: 50,
+        margin: 20,
+        padding: 10
+    },
+
+    button: {
+        width: '60%',
+        backgroundColor: '#568cffff',
+    }
+
+});
