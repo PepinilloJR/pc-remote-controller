@@ -37,3 +37,12 @@ Feel free to fork the project, submit issues, or make pull requests.
 ## License
 
 This project is open-source under the MIT License.
+
+## What's next?
+
+These are the current TODO functionalities:
+
+- Shutdown and reboot buttons
+- Floating and customizable buttons
+- Native Linux support
+- Quality of life improvements
