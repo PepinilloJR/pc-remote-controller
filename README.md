@@ -13,12 +13,12 @@ Go to realeases and install the last APK version of the client on your phone, it
 ## Installation
 
 ### Server
-1. Download the latest release from the [Releases](link-to-releases).
+1. Download the latest release from the [Releases](https://github.com/PepinilloJR/pc-remote-controller/releases).
 2. If using the framework-dependent version, make sure .NET 8.0 Runtime is installed.
 3. Run the server executable. It will show the IP and port to connect.
 
 ### Client
-1. Download the latest APK from the [Releases](link-to-releases).
+1. Download the latest APK from the [Releases](https://github.com/PepinilloJR/pc-remote-controller/releases).
 2. Install it on your Android device.
 3. Open the app and connect to your PC using the displayed IP and port.
 
