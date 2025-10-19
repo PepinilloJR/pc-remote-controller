@@ -15,8 +15,38 @@ namespace main
 
             while (true)
             {
+                Console.WriteLine("Welcome to PC-remote-controller.");
 
-                Server server = new Server(8000);
+                Console.WriteLine("1. Start service");
+                Console.WriteLine("2. Start service with non-default IP and PORT");
+                Console.WriteLine("");
+                Console.Write("->");
+                String op = Console.ReadLine();
+
+                Server server;
+                if (op.Equals("1")) {
+                    server = new Server(8000);
+                } else if (op.Equals("2")) {
+                    Console.WriteLine("");
+                    Console.Write("IP ->");
+                    String ip = Console.ReadLine();
+                    Console.WriteLine("");
+                    Console.Write("Port ->");
+                    String port = Console.ReadLine();
+
+                    try
+                    {
+                        server = new Server(ip, int.Parse(port));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("The IP or PORT specified is not valid or not available");
+                        Console.WriteLine("There's something wrong with the format provided or the port is being used by another service");
+                        continue;
+                    }
+
+                } else { continue; }
+
 
                 Socket cliente = server.createSocket().bind().listen().awaitConnection();
 

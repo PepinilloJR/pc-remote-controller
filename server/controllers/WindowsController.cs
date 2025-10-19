@@ -16,7 +16,7 @@ namespace Controllers
         static int accelerationCounter = 0;
         static int aceleration = 5;
         static string lastInput = "";
-
+        static string lastInputClick = "";
         public struct POINT
         {
             public int x;
@@ -233,12 +233,12 @@ namespace Controllers
             {
                 mouse_event(MOUSEEVENTF_RIGHTDOWN, (uint)pt.x, (uint)pt.y, 0, 0);
 
-            } else if (button.Equals("right_click_up"))
+            } else if (button.Equals("right_click_up") && lastInputClick.Equals("right_click_up"))
             {
                 mouse_event(MOUSEEVENTF_RIGHTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
             }
-            else if (button.Equals("left_click_up"))
+            else if (button.Equals("left_click_up") && !lastInputClick.Equals("left_click_up"))
             {
                 mouse_event(MOUSEEVENTF_LEFTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
@@ -252,6 +252,8 @@ namespace Controllers
                 Console.WriteLine("Llego aca");
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (unchecked((uint)(-120))), 0);
             }
+
+            lastInputClick = button;
         }
 
         public static void VolumenChange (string vol_dir)

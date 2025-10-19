@@ -1,0 +1,9 @@
+.vs
+node_modules
+*.log
+*.tmp
+dist
+build
+.git
+.DS_Store
+Thumbs.db

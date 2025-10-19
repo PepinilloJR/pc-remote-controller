@@ -21,11 +21,21 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
       "edgeToEdgeEnabled": true,
       "package": "com.anonymous.controller"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d23f27a9-f9b4-4d8e-ba16-fea2ddac5e30"
+      }
+    },
+    "owner": "pepinillojr"
   }
 }

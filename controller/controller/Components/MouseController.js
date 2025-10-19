@@ -6,6 +6,7 @@ import { botoneras } from '../styles/styles';
 export function MouseController() {
 
     const intervalRef = useRef(null)
+    const clickIntervalRef = useRef(null)
     const clickStatus = useRef({})
 
     const sendMouseMovement = (message) => {
@@ -17,59 +18,106 @@ export function MouseController() {
         if (intervalRef.current) clearTimeout(intervalRef.current);
 
 
-        intervalRef.current = setTimeout(() => {sendMouseMovement(message)}, 50);
+        intervalRef.current = setTimeout(() => { sendMouseMovement(message) }, 50);
     }
 
     const sendMouseClick = (message) => {
 
         const status = {...clickStatus.current}
 
+        if (status[message] == "up" || !status[message]) {
+            console.log("hice click")
+            sendMessage(message)
+            status[message] = "click"
+        } else if (status[message] == "hold") {
+            console.log("detecte hold y cambie el status a click")
+
+            status[message] = "click"
+        }
+
+
+        clickStatus.current = { ...status }
+
+        if (clickIntervalRef.current) {
+            clearTimeout(clickIntervalRef.current)
+        }
+
+        clickIntervalRef.current = setTimeout(() => {
+            const status_ = {...clickStatus.current}
+            status_[message] = "hold"
+            clickStatus.current = {...status_}
+        }, 500)
+    }
+
+    const stopMouseClick = (message) => {
+        const status = { ...clickStatus.current }
+        console.log("estoy cerrando el click con status: " + status[message])
         if (status[message] !== "hold") {
+            console.log("detecte click y cambie a up")
+            clearTimeout(clickIntervalRef.current);
+            sendMessage(message + "_up")
+            status[message] = 'up'
+        }
+        clickStatus.current = { ...status }
+    }
+
+    /*
+
+
+const sendMouseClick = (message) => {
+
+        const status = { ...clickStatus.current }
+
+        if (status[message] !== "hold" && (status[message] == "up" || !status[message])) {
             sendMessage(message)
             status[message] = "click"
         } else {
+            console.log("el stop del timeout piola")
             sendMessage(message + "_up")
             status[message] = "up"
         }
 
-        clickStatus.current = {...status}
+        clickStatus.current = { ...status }
 
         // to avoid potential floating timer on user double click
-        if (intervalRef.current) clearTimeout(intervalRef.current);
+        if (clickIntervalRef.current) clearTimeout(clickIntervalRef.current);
+
+        if (clickStatus.current[message] !== "up") {
+            clickIntervalRef.current = setTimeout(() => {
+                console.log("el stop del timeout not really")
+                const status_ = { ...clickStatus.current }
+                status_[message] = "hold"
+                clickStatus.current = { ...status_ }
 
 
-        intervalRef.current = setTimeout(() => {
-            const status_ = {...clickStatus.current}
-            status_[message] = "hold"
-            clickStatus.current = {...status_}
-            
-
-        }, 500);
+            }, 500);
+        }
     }
-
+*/
     const stopMouseMovement = () => {
         clearTimeout(intervalRef.current);
     }
-
+/*
     const stopMouseClick = (message) => {
-        const status = {...clickStatus.current}
-        
-        if (status[message] !== "hold") {
+        const status = { ...clickStatus.current }
+
+        if (status[message] !== "hold" && status[message] !== "up") {
+            clearTimeout(clickIntervalRef.current);
             sendMessage(message + "_up")
             status[message] = 'up'
-            clearTimeout(intervalRef.current);
-        } 
-        clickStatus.current = {...status}
-    }       
+            console.log("el stop este")
+        }
+        clickStatus.current = { ...status }
+    }
 
-
+*/
 
     return <>
 
-        <View style={{...botoneras.container, top: 80, height: 250}}>
+        <View style={{ ...botoneras.container, top: 80, height: 250 }}>
 
 
-            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center'}}>
+            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
                 <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Up</Text></Pressable>
             </View>
 
@@ -78,28 +126,28 @@ export function MouseController() {
                 <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Right</Text></Pressable>
             </View>
 
-            <View style={{ ...botoneras.buttonRowSeparated,  justifyContent: 'center' }}>
+            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
                 <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Down</Text></Pressable>
             </View>
         </View>
 
-        <View style={{...botoneras.container, top: 350}}>
+        <View style={{ ...botoneras.container, top: 350 }}>
 
 
-            <View style={{ ...botoneras.buttonRow}}>
-                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('left_click')} onPressOut={() => {stopMouseClick('left_click')}}><Text style={botoneras.buttonText}>Click 0</Text></Pressable>
-                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('right_click')} onPressOut={() => {stopMouseClick('right_click')}}><Text style={botoneras.buttonText}>Click 1</Text></Pressable>
+            <View style={{ ...botoneras.buttonRow }}>
+                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('left_click')} onPressOut={() => { stopMouseClick('left_click') }}><Text style={botoneras.buttonText}>Click 0</Text></Pressable>
+                <Pressable style={botoneras.button} onPressIn={() => sendMouseClick('right_click')} onPressOut={() => { stopMouseClick('right_click') }}><Text style={botoneras.buttonText}>Click 1</Text></Pressable>
 
             </View>
 
         </View>
 
         <View style={{ ...botoneras.container, top: 650, left: 20, height: 220, width: 60 }}>
-            <View style={{ ...botoneras.buttonRow}}>
-                <Pressable style={{...botoneras.buttonSeparated, height: 100, width: 60}} onPressIn={() => sendMouseClick('wheel_up')}><Text style={botoneras.buttonText}>W_UP</Text></Pressable>
+            <View style={{ ...botoneras.buttonRow }}>
+                <Pressable style={{ ...botoneras.buttonSeparated, height: 100, width: 60 }} onPressIn={() => sendMouseMovement('wheel_up')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>W_UP</Text></Pressable>
             </View>
             <View style={{ ...botoneras.buttonRow }}>
-                <Pressable style={{...botoneras.buttonSeparated, height: 100, width: 60}} onPressIn={() => sendMouseClick('wheel_down')}><Text style={botoneras.buttonText}>W_DOWN</Text></Pressable>
+                <Pressable style={{ ...botoneras.buttonSeparated, height: 100, width: 60 }} onPressIn={() => sendMouseMovement('wheel_down') } onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>W_DOWN</Text></Pressable>
             </View>
         </View>
 
