@@ -1,4 +1,5 @@
 ﻿
+using Controller;
 using Controllers;
 using Reception;
 using ServerController;
@@ -61,6 +62,8 @@ namespace main
 
                 Task recibir = Task.Run(async () =>
                 {
+                    LinuxController.Execute();
+                    LinuxController.CreateKeyCodesMapping();
                     while (true)
                     {
                         CancellationTokenSource token_t = new CancellationTokenSource();
@@ -73,38 +76,40 @@ namespace main
                             else { token.Cancel(); }
                         });
                         string mensaje = await receiver.listen(tokenCancelacion);
+                        mensaje = mensaje.ToLower();
                         token_t.Cancel();
                         Console.WriteLine("Mensaje recibido: " + mensaje);
                         if (mensaje == "") { token.Cancel(); }  
 
-
+                        Console.WriteLine("|" + mensaje + "|");
                         if (mensaje == "alive")
                         {
-
                             continue;
                         }
                         else if (mensaje.Length == 1)
                         {
-                            Console.WriteLine(mensaje);
-                            WindowsController.WriteText(mensaje.ToCharArray()[0]);
+                            //Console.WriteLine(mensaje);
+                            LinuxController.WriteText(mensaje);
+                            //WindowsController.WriteText(mensaje.ToCharArray()[0]);
                         }
                         else if (mensaje.Contains("special"))
                         {
-                            mensaje = mensaje.Replace("special", "");
-                            WindowsController.WriteTextSpecial(mensaje);
+                            mensaje = mensaje.Replace("special", "").ToLower();
+                            LinuxController.WriteTextSpecial(mensaje);
+                            //WindowsController.WriteTextSpecial(mensaje);
                         } else if (mensaje.Contains("vol"))
                         {
-                            WindowsController.VolumenChange(mensaje);
+                            //WindowsController.VolumenChange(mensaje);
                         }
                         else
                         {
-
-                            WindowsController.MoveMouse(mensaje);
-                            WindowsController.ClickMouse(mensaje);
+                            //WindowsController.MoveMouse(mensaje);
+                            LinuxController.MoveMouse(mensaje);
+                            LinuxController.ClickMouse(mensaje);
+                            //WindowsController.ClickMouse(mensaje);
                         }
                     }
                 });
-
 
                 try {
                     Task.WaitAll(recibir);
@@ -114,6 +119,7 @@ namespace main
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     Console.WriteLine("Posible desconexion repentina del cliente");
                     server.Close();
                     cliente.Close();

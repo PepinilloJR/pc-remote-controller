@@ -204,9 +204,6 @@ namespace Controllers
 
             if (direction.Equals("left"))
             {
-
-
-
                 SetCursorPos(pt.x - aceleration, pt.y);
             } else if (direction.Equals("right"))
             {
@@ -233,7 +230,7 @@ namespace Controllers
             {
                 mouse_event(MOUSEEVENTF_RIGHTDOWN, (uint)pt.x, (uint)pt.y, 0, 0);
 
-            } else if (button.Equals("right_click_up") && lastInputClick.Equals("right_click_up"))
+            } else if (button.Equals("right_click_up") && !lastInputClick.Equals("right_click_up"))
             {
                 mouse_event(MOUSEEVENTF_RIGHTUP, (uint)pt.x, (uint)pt.y, 0, 0);
 
@@ -244,12 +241,10 @@ namespace Controllers
 
             } else if (button.Contains("wheel_up"))
             {
-                Console.WriteLine("Llego aca");
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, 50, 0);
             }
             else if (button.Contains("wheel_down"))
             {
-                Console.WriteLine("Llego aca");
                 mouse_event(MOUSEEVENTF_WHEEL, 0, 0, (unchecked((uint)(-120))), 0);
             }
 
