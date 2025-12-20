@@ -100,6 +100,7 @@ namespace main
                         } else if (mensaje.Contains("vol"))
                         {
                             //WindowsController.VolumenChange(mensaje);
+                            LinuxController.VolumenChange(mensaje);
                         }
                         else
                         {

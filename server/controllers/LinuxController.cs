@@ -10,6 +10,7 @@ namespace Controller
 
         public static StreamWriter input;
         public static StreamReader erroutput;
+        public static string errBuffer = "";
         public static Process xdotool;
         public static StreamReader output;
         public static Process xmodmap;
@@ -20,15 +21,11 @@ namespace Controller
             ProcessStartInfo psi = new ProcessStartInfo();
 
             psi.FileName = "xdotool";
-            //foreach (String command in args)
-            //{
-            //    psi.ArgumentList.Add(command);
-            //}
 
             psi.ArgumentList.Add("-");
             psi.RedirectStandardInput = true;
             psi.RedirectStandardError = true;
-        
+
 
             xdotool = new Process();
             xdotool.StartInfo = psi;
@@ -39,15 +36,24 @@ namespace Controller
                 if (e.Data.Contains("No such key name"))
                 {
                     // extract the key 
-                    
                     var match = Regex.Match(e.Data, @"'(.+?)'");
 
-                    Console.WriteLine("xdotool coudn't find the key " + match.Groups[1].Value +", you could try to add the keyname to its corresponding keycode on ~/.config/controllerKeyMap");
-                    
-                    // write the text for feedback (and emojis)
-                    WriteText(match.Groups[1].Value);
-                } 
-                //Console.WriteLine(e.Data);
+                    Console.WriteLine("xdotool coudn't find the key " + match.Groups[1].Value + ", you could try to add the keyname to its corresponding keycode on ~/.config/controllerKeyMap");
+
+                    //theres a chance for duplicated errors using xdotool 
+
+                    if (!errBuffer.Equals(e.Data))
+                    {
+                        // write the text for feedback (and emojis)
+
+                        WriteText(match.Groups[1].Value);
+                        errBuffer = e.Data;
+                    } else
+                    {
+                        errBuffer = "";
+                    }
+
+                }
             };
             xdotool.Start();
 
@@ -76,7 +82,7 @@ namespace Controller
         }
 
         // not every pc keyboard layout is the same
-        public static void CreateKeyCodesMapping ()
+        public static void CreateKeyCodesMapping()
         {
             ProcessStartInfo psi = new ProcessStartInfo();
 
@@ -84,16 +90,16 @@ namespace Controller
 
             psi.FileName = "/bin/bash";
             psi.ArgumentList.Add("-c");
-            psi.ArgumentList.Add("xmodmap -pke > /home/"+user+"/.config/controllerKeyMap");
+            psi.ArgumentList.Add("xmodmap -pke > /home/" + user + "/.config/controllerKeyMap");
 
             xmodmap = new Process();
             xmodmap.StartInfo = psi;
             xmodmap.Start();
 
             // this is horrible but it works 
-            while (!xmodmap.HasExited) { continue;}
+            while (!xmodmap.HasExited) { continue; }
 
-            string[] file = File.ReadAllLines("/home/"+user+"/.config/controllerKeyMap");
+            string[] file = File.ReadAllLines("/home/" + user + "/.config/controllerKeyMap");
 
             foreach (string line in file)
             {
@@ -101,8 +107,9 @@ namespace Controller
                 if (collumns.Length > 3)
                 {
                     Console.WriteLine(Regex.Replace(line, @"\s+", " "));
-                    if (!keyMap.ContainsKey(collumns[3].ToLower())) {
-                        
+                    if (!keyMap.ContainsKey(collumns[3].ToLower()))
+                    {
+
                         keyMap.Add(collumns[3].ToLower(), collumns[1]);
                     }
                 }
@@ -114,31 +121,37 @@ namespace Controller
         public static void WriteTextSpecial(string text)
         {
             // instead of using a enum, we get a dictionary from controllerKeyMap file on ~/.config
-            
+
             if (!keyMap.TryGetValue(text, out string keyValue))
             {
                 Console.WriteLine("There is no keycode available for this input on the keyboard layout");
 
                 // use xdotool mapping instead
+                if (text.Equals("esc"))
+                {
+                    text = "Escape";
+                }
 
                 input.Write("key --clearmodifiers " + text + "\n");
 
-            } else
+            }
+            else
             {
                 input.Write("key --clearmodifiers " + keyValue + "\n");
             }
-            
 
-        } 
+
+        }
         public static void WriteText(string text)
         {
             // special case for space key and backspace key
-            // there must be a better way of doing this
+            // TODO: there must be a better way of doing this
+
             if (text.Equals(" "))
             {
                 input.Write("key space\n");
-            } else
-            {
+            }
+            else {
                 input.Write("type " + text + "\n");
             }
             input.Flush();
@@ -242,5 +255,21 @@ namespace Controller
             input.Flush();
         }
 
+        public static void VolumenChange(string vol_dir)
+        {
+            // this bifurcation is redundant, but later on will make sense when direct volume control being implemented so idk :b
+            if (vol_dir == "vol_up")
+            {
+                WriteTextSpecial("XF86AudioRaiseVolume");
+
+            }
+            else if (vol_dir == "vol_down")
+            {
+                WriteTextSpecial("XF86AudioLowerVolume");
+            }
+        }
+
     }
+
+
 }
