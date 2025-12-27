@@ -22,13 +22,13 @@ Go to realeases and install the last APK version of the client on your phone, it
 2. Install it on your Android device.
 3. Open the app and connect to your PC using the displayed IP and port.
 
-
 ## Requirements
 
-- Windows 10/11 (or compatible)
+- Windows 10/11 or any Linux distro
 - .NET 8.0 Runtime (if using the framework-dependent server) 
   or the self-contained version (no installation needed)
 - Android 6.0+ for the client app
+- For Linux installations, xmodmap and xdotool are required
 
 ## Contributing
 
@@ -44,5 +44,4 @@ These are the current TODO functionalities:
 
 - Shutdown and reboot buttons
 - Floating and customizable buttons
-- Native Linux support
 - Quality of life improvements
