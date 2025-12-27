@@ -1,8 +1,9 @@
 ﻿
-using Controllers;
+using Controller;
 using Reception;
 using ServerController;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 
@@ -54,57 +55,22 @@ namespace main
 
                 Receiver receiver = new Receiver(cliente);
 
-                CancellationTokenSource token = new CancellationTokenSource();
+                CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-                CancellationToken tokenCancelacion = token.Token;
+                CancellationToken token = tokenSource.Token;
 
+                IControllerBase controller;
 
-                Task recibir = Task.Run(async () =>
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 {
-                    while (true)
-                    {
-                        CancellationTokenSource token_t = new CancellationTokenSource();
+                    controller = new LinuxController();
+                } else
+                {
+                    controller = new WindowsController();
+                }
+                
 
-                        CancellationToken tokenCancelacion_t = token_t.Token;
-                        Task timeout = Task.Run(() =>
-                        {
-                            Task.Delay(10000, tokenCancelacion_t).Wait();
-                            if (tokenCancelacion_t.IsCancellationRequested) { return; }
-                            else { token.Cancel(); }
-                        });
-                        string mensaje = await receiver.listen(tokenCancelacion);
-                        token_t.Cancel();
-                        Console.WriteLine("Mensaje recibido: " + mensaje);
-                        if (mensaje == "") { token.Cancel(); }  
-
-
-                        if (mensaje == "alive")
-                        {
-
-                            continue;
-                        }
-                        else if (mensaje.Length == 1)
-                        {
-                            Console.WriteLine(mensaje);
-                            WindowsController.WriteText(mensaje.ToCharArray()[0]);
-                        }
-                        else if (mensaje.Contains("special"))
-                        {
-                            mensaje = mensaje.Replace("special", "");
-                            WindowsController.WriteTextSpecial(mensaje);
-                        } else if (mensaje.Contains("vol"))
-                        {
-                            WindowsController.VolumenChange(mensaje);
-                        }
-                        else
-                        {
-
-                            WindowsController.MoveMouse(mensaje);
-                            WindowsController.ClickMouse(mensaje);
-                        }
-                    }
-                });
-
+                Task recibir = server.Receive(controller, receiver, tokenSource,token);
 
                 try {
                     Task.WaitAll(recibir);
@@ -114,6 +80,7 @@ namespace main
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex.Message);
                     Console.WriteLine("Posible desconexion repentina del cliente");
                     server.Close();
                     cliente.Close();

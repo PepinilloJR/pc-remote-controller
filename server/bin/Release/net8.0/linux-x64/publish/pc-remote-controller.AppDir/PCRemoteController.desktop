@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=PC Remote Controller
+Exec=Server
+Terminal=true
+Icon=logo
+Type=Application
+Categories=Utility

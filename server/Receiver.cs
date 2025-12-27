@@ -23,9 +23,8 @@ namespace Reception
             if (bytesRead <= 0)
                 return string.Empty;
 
-            string crude = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            string[] messages = crude.TrimEnd('\r', '\n', '\0').Split('|');
-            string message = messages[messages.Length - 1];
+            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+
             return message; 
         }
 
