@@ -34,14 +34,14 @@ namespace Controller
             return "WindowsController";
         }
 
-        public void WriteText(char input)
+        public void WriteText(string input)
         {
             Sys32.INPUT ex = new Sys32.INPUT();
             Sys32.INPUT[] exampleInput = { ex };
             exampleInput[0].Type = 1;
             exampleInput[0].Data.Keyboard.Vk = 0;
             exampleInput[0].Data.Keyboard.Flags = 0x0004;
-            exampleInput[0].Data.Keyboard.Scan = input; // char can directly be converted to unicode 
+            exampleInput[0].Data.Keyboard.Scan = input.ToCharArray()[0]; // char can directly be converted to unicode 
             exampleInput[0].Data.Keyboard.ExtraInfo = IntPtr.Zero;
             exampleInput[0].Data.Keyboard.Time = 0;
             Console.WriteLine(input);
@@ -55,7 +55,7 @@ namespace Controller
             Sys32.INPUT[] exampleInput = { ex };
             exampleInput[0].Type = 1;
 
-            Enum.TryParse(input, out VirtualKeys vk);
+            Enum.TryParse(input, true, out VirtualKeys vk);
             exampleInput[0].Data.Keyboard.Vk = ((char)vk);
             exampleInput[0].Data.Keyboard.Flags = 0;
             exampleInput[0].Data.Keyboard.Scan = 0; // char can directly be converted to unicode 

@@ -1,2 +1,0 @@
-/home/pepinillojr/proyectos/pc-remote-controller/server/bin/Release/net8.0/linux-x64/publish/Server.pdb
-/home/pepinillojr/proyectos/pc-remote-controller/server/bin/Release/net8.0/linux-x64/publish/Server
