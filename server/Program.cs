@@ -3,6 +3,7 @@ using Controller;
 using Reception;
 using ServerController;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 
@@ -58,9 +59,18 @@ namespace main
 
                 CancellationToken token = tokenSource.Token;
 
-                LinuxController linuxController = new LinuxController();
+                IControllerBase controller;
+
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    controller = new LinuxController();
+                } else
+                {
+                    controller = new WindowsController();
+                }
                 
-                Task recibir = server.Receive(linuxController, receiver, tokenSource,token);
+
+                Task recibir = server.Receive(controller, receiver, tokenSource,token);
 
                 try {
                     Task.WaitAll(recibir);
