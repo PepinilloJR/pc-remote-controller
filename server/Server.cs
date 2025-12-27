@@ -6,7 +6,8 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-
+using Controller;
+using Reception;
 namespace ServerController
 {
     internal class Server
@@ -18,10 +19,9 @@ namespace ServerController
 
         private Socket client { get; set; }
 
-       
+
 
         public Server() { }
-
 
         public Server(int port)
         {
@@ -42,7 +42,7 @@ namespace ServerController
                     {
                         if (uip.Address.AddressFamily == AddressFamily.InterNetwork)
                         {
-                            this.ipAddress = IPAddress.Parse( uip.Address.ToString());
+                            this.ipAddress = IPAddress.Parse(uip.Address.ToString());
                             break;
                         }
 
@@ -57,7 +57,8 @@ namespace ServerController
 
         }
 
-        public Server(String ip, int port) { 
+        public Server(String ip, int port)
+        {
             this.ipAddress = IPAddress.Parse(ip);
             this.port = port;
 
@@ -68,7 +69,7 @@ namespace ServerController
         public Server createSocket()
         {
             this.socket = new Socket(this.ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-           
+
 
             return this;
         }
@@ -82,12 +83,35 @@ namespace ServerController
 
         public Server listen()
         {
-            this.socket.Listen(2);  
+            this.socket.Listen(2);
 
             return this;
         }
 
+        public async Task Receive(IControllerBase controller, Receiver receiver, CancellationTokenSource tokenSource, CancellationToken token)
+        {
 
+            while (true)
+            {
+                CancellationTokenSource tokenSourceTimeOut = new CancellationTokenSource();
+
+                CancellationToken tokenTimeOut = tokenSourceTimeOut.Token;
+
+                Task timeout = Task.Run(() =>
+                {
+                    Task.Delay(10000, tokenTimeOut).Wait();
+                    if (tokenTimeOut.IsCancellationRequested) { return; }
+                    else { tokenSource.Cancel(); }
+                });
+
+                tokenSourceTimeOut.Cancel();
+                string message = await receiver.listen(token);
+                if (message == "") { tokenSource.Cancel(); }
+
+                FunctionSelector.selectFunction(message, controller);
+
+            }
+        }
 
         public Socket awaitConnection()
         {

@@ -1,6 +1,5 @@
 ﻿
 using Controller;
-using Controllers;
 using Reception;
 using ServerController;
 using System.Net.Sockets;
@@ -55,62 +54,13 @@ namespace main
 
                 Receiver receiver = new Receiver(cliente);
 
-                CancellationTokenSource token = new CancellationTokenSource();
+                CancellationTokenSource tokenSource = new CancellationTokenSource();
 
-                CancellationToken tokenCancelacion = token.Token;
+                CancellationToken token = tokenSource.Token;
 
-
-                Task recibir = Task.Run(async () =>
-                {
-                    LinuxController.Execute();
-                    LinuxController.CreateKeyCodesMapping();
-                    while (true)
-                    {
-                        CancellationTokenSource token_t = new CancellationTokenSource();
-
-                        CancellationToken tokenCancelacion_t = token_t.Token;
-                        Task timeout = Task.Run(() =>
-                        {
-                            Task.Delay(10000, tokenCancelacion_t).Wait();
-                            if (tokenCancelacion_t.IsCancellationRequested) { return; }
-                            else { token.Cancel(); }
-                        });
-                        string mensaje = await receiver.listen(tokenCancelacion);
-                        mensaje = mensaje.ToLower();
-                        token_t.Cancel();
-                        Console.WriteLine("Mensaje recibido: " + mensaje);
-                        if (mensaje == "") { token.Cancel(); }  
-
-                        Console.WriteLine("|" + mensaje + "|");
-                        if (mensaje == "alive")
-                        {
-                            continue;
-                        }
-                        else if (mensaje.Length == 1)
-                        {
-                            //Console.WriteLine(mensaje);
-                            LinuxController.WriteText(mensaje);
-                            //WindowsController.WriteText(mensaje.ToCharArray()[0]);
-                        }
-                        else if (mensaje.Contains("special"))
-                        {
-                            mensaje = mensaje.Replace("special", "").ToLower();
-                            LinuxController.WriteTextSpecial(mensaje);
-                            //WindowsController.WriteTextSpecial(mensaje);
-                        } else if (mensaje.Contains("vol"))
-                        {
-                            //WindowsController.VolumenChange(mensaje);
-                            LinuxController.VolumenChange(mensaje);
-                        }
-                        else
-                        {
-                            //WindowsController.MoveMouse(mensaje);
-                            LinuxController.MoveMouse(mensaje);
-                            LinuxController.ClickMouse(mensaje);
-                            //WindowsController.ClickMouse(mensaje);
-                        }
-                    }
-                });
+                LinuxController linuxController = new LinuxController();
+                
+                Task recibir = server.Receive(linuxController, receiver, tokenSource,token);
 
                 try {
                     Task.WaitAll(recibir);
