@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -275,6 +276,34 @@ namespace Controller
             {
                 WriteTextSpecial("XF86AudioLowerVolume");
             }
+        }
+
+        public void JoyStickMoveMouse(string coordinates)
+        {
+            
+
+            // format of message: joystick:x:y
+
+            float dx = (float) Double.Parse(coordinates.Split(":")[1]); 
+            float dy = (float) Double.Parse(coordinates.Split(":")[2]); 
+
+            float Xaceleration = 0.3f;
+            float Yaceleration = 0.2f;
+
+
+            String xdotoolcmd = "mousemove_relative";
+
+            float vx = dx * Xaceleration;
+            float vy = dy * Yaceleration;
+
+            if (vx < 0)
+            {
+                input.Write(xdotoolcmd + " " + "--" + " " + vx + " " + vy + "\n");
+            } else
+            {
+                input.Write(xdotoolcmd + " " + vx + " " + vy + "\n");
+            }
+            
         }
 
     }

@@ -30,7 +30,7 @@ export function MouseController() {
         if (intervalRef.current) clearTimeout(intervalRef.current);
 
 
-        intervalRef.current = setTimeout(() => { sendMouseMovement(message) }, 50);
+        intervalRef.current = setTimeout(() => { sendMouseMovement(message) }, 10);
     }
 
     const sendMouseClick = (message) => {

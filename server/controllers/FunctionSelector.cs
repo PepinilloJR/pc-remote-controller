@@ -33,6 +33,10 @@ namespace Controller
                 //WindowsController.VolumenChange(mensaje);
                 controller.VolumenChange(message);
             }
+            else if (message.Contains("joystick"))
+            {
+                controller.JoyStickMoveMouse(message);
+            }
             else
             {
                 //WindowsController.MoveMouse(mensaje);
@@ -42,6 +46,5 @@ namespace Controller
             }
         }
     }
-
 
 }

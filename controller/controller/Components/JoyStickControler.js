@@ -41,8 +41,8 @@ export function JoyStick ({JoyStickPos, Sender, Stopper}) {
     })).current;
 
     return <>
-        <View style={joystick.container}>
-            <Animated.View style={{...joystick.stick, top: pan.y, left: pan.x }} {...panResponder.panHandlers} >
+        <View style={joystick.container} {...panResponder.panHandlers}>
+            <Animated.View style={{...joystick.stick, top: pan.y, left: pan.x }} >
 
             </Animated.View>
         </View>

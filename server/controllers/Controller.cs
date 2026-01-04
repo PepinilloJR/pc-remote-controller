@@ -4,15 +4,17 @@ namespace Controller
     {
         public string getType();
 
-        public void MoveMouse(string direction) { }
+        public void MoveMouse(string direction);
 
-        public void WriteText(string input) { }
+        public void JoyStickMoveMouse(string coordinates) {}
 
-        public void WriteTextSpecial(string input) { }
+        public void WriteText(string input);
 
-        public void ClickMouse(string input) { }
+        public void WriteTextSpecial(string input);
 
-        public void VolumenChange(string input) {}
+        public void ClickMouse(string input);
+
+        public void VolumenChange(string input);
     }
 
 }
