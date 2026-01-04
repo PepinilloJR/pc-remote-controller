@@ -2,18 +2,30 @@ import { Button, View, StyleSheet, Touchable, Pressable, Text } from 'react-nati
 import { sendMessage, stopMessage } from '../Services/ControllerService';
 import { useRef } from 'react';
 import { botoneras } from '../styles/styles';
+import { JoyStick } from './JoyStickControler';
 
 export function MouseController() {
 
     const intervalRef = useRef(null)
     const clickIntervalRef = useRef(null)
     const clickStatus = useRef({})
+    const joyStickPos = useRef({x: 0, y: 0})
 
     const sendMouseMovement = (message) => {
-        sendMessage(message)
+
+        var formatedMessage;
+
+        // if type is string, then the legacy controller is being used
+        if (typeof(message) != 'string') {
+            console.log(message)
+            formatedMessage = "joystick:" + message.x + ":" + message.y
+        } else {
+            formatedMessage = message
+        }
+
+        sendMessage(formatedMessage)
 
         // to avoid potential floating timer on user double click
-
 
         if (intervalRef.current) clearTimeout(intervalRef.current);
 
@@ -34,7 +46,6 @@ export function MouseController() {
 
             status[message] = "click"
         }
-
 
         clickStatus.current = { ...status }
 
@@ -61,75 +72,13 @@ export function MouseController() {
         clickStatus.current = { ...status }
     }
 
-    /*
 
-
-const sendMouseClick = (message) => {
-
-        const status = { ...clickStatus.current }
-
-        if (status[message] !== "hold" && (status[message] == "up" || !status[message])) {
-            sendMessage(message)
-            status[message] = "click"
-        } else {
-            console.log("el stop del timeout piola")
-            sendMessage(message + "_up")
-            status[message] = "up"
-        }
-
-        clickStatus.current = { ...status }
-
-        // to avoid potential floating timer on user double click
-        if (clickIntervalRef.current) clearTimeout(clickIntervalRef.current);
-
-        if (clickStatus.current[message] !== "up") {
-            clickIntervalRef.current = setTimeout(() => {
-                console.log("el stop del timeout not really")
-                const status_ = { ...clickStatus.current }
-                status_[message] = "hold"
-                clickStatus.current = { ...status_ }
-
-
-            }, 500);
-        }
-    }
-*/
     const stopMouseMovement = () => {
         clearTimeout(intervalRef.current);
     }
-/*
-    const stopMouseClick = (message) => {
-        const status = { ...clickStatus.current }
-
-        if (status[message] !== "hold" && status[message] !== "up") {
-            clearTimeout(clickIntervalRef.current);
-            sendMessage(message + "_up")
-            status[message] = 'up'
-            console.log("el stop este")
-        }
-        clickStatus.current = { ...status }
-    }
-
-*/
 
     return <>
-
-        <View style={{ ...botoneras.container, top: 80, height: 250 }}>
-
-
-            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
-                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Up</Text></Pressable>
-            </View>
-
-            <View style={{ ...botoneras.buttonRowSeparated }}>
-                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('left')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Left</Text></Pressable>
-                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Right</Text></Pressable>
-            </View>
-
-            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
-                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Down</Text></Pressable>
-            </View>
-        </View>
+        <JoyStick JoyStickPos={joyStickPos} Sender={sendMouseMovement} Stopper={stopMouseMovement}></JoyStick>
 
         <View style={{ ...botoneras.container, top: 350 }}>
 
@@ -194,3 +143,25 @@ const styles2 = StyleSheet.create({
         height: '100%'
     }
 });
+
+
+/* 
+            <View style={{ ...botoneras.container, top: 80, height: 250 }}>
+
+
+            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('up')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Up</Text></Pressable>
+            </View>
+
+            <View style={{ ...botoneras.buttonRowSeparated }}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('left')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Left</Text></Pressable>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('right')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Right</Text></Pressable>
+            </View>
+
+            <View style={{ ...botoneras.buttonRowSeparated, justifyContent: 'center' }}>
+                <Pressable style={botoneras.buttonSeparated} onPressIn={() => sendMouseMovement('down')} onPressOut={stopMouseMovement}><Text style={botoneras.buttonText}>Down</Text></Pressable>
+            </View>
+        </View>
+
+
+*/

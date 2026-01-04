@@ -62,6 +62,7 @@ export const interfaz = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+
     textoView: {
 
         backgroundColor: '#fff',
@@ -89,3 +90,25 @@ export const interfaz = StyleSheet.create({
     }
 
 });
+
+export const joystick = StyleSheet.create({
+    container: {
+        position: "relative",
+        top: "-25%",
+        width: "200",
+        height: "200",
+        backgroundColor: "white",
+        borderColor: "gray",
+        borderWidth: 2,
+        borderRadius: 360,
+        alignItems: "center",
+        justifyContent: "center"
+    }, 
+    stick: {
+        position: 'relative',
+        width: "50%",
+        height: "50%",
+        backgroundColor: "gray",
+        borderRadius: 360
+    }
+})
