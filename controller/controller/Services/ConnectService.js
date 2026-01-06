@@ -38,7 +38,7 @@ export function ConnectMenu({ setConnected }) {
             <View style= {interfaz.textoView}><Text style= {interfaz.texto}>Welcome!!!!!</Text></View>
             <View style= {interfaz.textoView}><Text style= {interfaz.texto}>Type the server's ip in here</Text></View>
 
-            <TextInput style= {interfaz.input} ref={refTextInput} onChangeText={(e) => { refTextInput.current.value = e }} onSubmitEditing={() => { handleConnect(refTextInput.current.value) }} placeholder="ie: 127.0.0.1:8080 ..."></TextInput>
+            <TextInput style= {interfaz.input} ref={refTextInput} onChangeText={(e) => { refTextInput.current.value = e }} onSubmitEditing={() => { handleConnect(refTextInput.current.value) }} placeholder="ie: 127.0.0.1:8080 ..." placeholderTextColor="#888"></TextInput>
             <TouchableOpacity style={interfaz.button} onPress={() => { handleConnect(refTextInput.current.value) }}><Text style= {interfaz.texto}>Connect</Text></TouchableOpacity>
 
             {errorText ? <Text>Error trying to connect: {errorText}</Text> : <></>}

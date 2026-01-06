@@ -72,11 +72,14 @@ export const interfaz = StyleSheet.create({
 
     texto: {
         textAlign: 'center',
+        color: '#000',
         fontSize: 25
     },  
 
     input: {
         borderColor: 'gray',
+                color: '#000',
+
         borderWidth: 1,
         width: '80%',
         height: 50,
