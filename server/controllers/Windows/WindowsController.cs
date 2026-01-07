@@ -165,6 +165,27 @@ namespace Controller
                 WriteTextSpecial(vol_dir);
             }
         }
+
+        public void JoyStickMoveMouse(string coordinates)
+        {
+            Sys32.GetCursorPos(out Sys32.POINT pt);
+
+            Console.WriteLine(coordinates);
+            // probably better to do this from the client
+
+            float dx = (float)Double.Parse(coordinates.Split(":")[1]);
+            float dy = (float)Double.Parse(coordinates.Split(":")[2]);
+
+            float Xaceleration = 0.3f;
+            float Yaceleration = 0.2f;
+
+            int vx = (int)Math.Round(dx * Xaceleration,0);
+            int vy =  (int)Math.Round(dy * Yaceleration, 0);
+
+            Sys32.SetCursorPos(pt.x + vx, pt.y + vy);
+            
+        }
+
     }
 
 
