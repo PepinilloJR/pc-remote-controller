@@ -98,8 +98,8 @@ export const joystick = StyleSheet.create({
     container: {
         position: "relative",
         top: "-25%",
-        width: "200",
-        height: "200",
+        width: 200,
+        height: 200,
         backgroundColor: "white",
         borderColor: "gray",
         borderWidth: 2,
