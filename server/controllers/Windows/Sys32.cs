@@ -47,7 +47,9 @@ namespace Controller
         // for mouse clicking
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint wData, UIntPtr dwExtraInfo);
-        // events 
+
+        // events (also usable for the Mouse SendInput)
+        public const uint MOUSEEVENTF_MOVE = 0x0001;
         public const uint MOUSEEVENTF_LEFTDOWN = 0x02;
         public const uint MOUSEEVENTF_LEFTUP = 0x04;
         public const uint MOUSEEVENTF_RIGHTDOWN = 0x08;

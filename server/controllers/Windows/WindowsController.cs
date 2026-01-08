@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Controller;
 using Controller;
+using static Controller.Sys32;
 namespace Controller
 {
     public class WindowsController : IControllerBase
@@ -170,21 +171,33 @@ namespace Controller
         public void JoyStickMoveMouse(string coordinates)
         {
             Sys32.GetCursorPos(out Sys32.POINT pt);
-
-            //Console.WriteLine(coordinates);
-            // probably better to do this from the client
           
             float dx = float.Parse(coordinates.Split(":")[1], CultureInfo.InvariantCulture);
             float dy = float.Parse(coordinates.Split(":")[2], CultureInfo.InvariantCulture);
 
-            float Xaceleration = 0.5f;
-            float Yaceleration = 0.4f;
+            float Xaceleration = 0.7f;
+            float Yaceleration = 0.6f;
 
             int vx = (int)(dx * Xaceleration);
-            int vy =  (int)(dy * Yaceleration);
-            Console.WriteLine(dx + " " + dy);
-            Sys32.SetCursorPos(pt.x + vx, pt.y + vy);
+            int vy = (int)(dy * Yaceleration);
+
+
+            //Sys32.SetCursorPos(pt.x + vx, pt.y + vy);
+            // using sendInput instead
+
+            Sys32.INPUT mouseInput = new Sys32.INPUT();
+            Sys32.INPUT[] inputs = { mouseInput };
+            inputs[0].Type = 0;
+
+            inputs[0].Data.Mouse.X = vx;
+            inputs[0].Data.Mouse.Y = vy;
+            inputs[0].Data.Mouse.Flags = Sys32.MOUSEEVENTF_MOVE;
+            inputs[0].Data.Mouse.MouseData = 0;
+            inputs[0].Data.Mouse.Time = 0;
+            inputs[0].Data.Mouse.ExtraInfo = IntPtr.Zero;
             
+            Sys32.SendInput(1, inputs, Marshal.SizeOf(typeof(Sys32.INPUT)));
+
         }
 
     }
