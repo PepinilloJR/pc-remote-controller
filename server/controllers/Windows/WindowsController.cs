@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
@@ -170,18 +171,18 @@ namespace Controller
         {
             Sys32.GetCursorPos(out Sys32.POINT pt);
 
-            Console.WriteLine(coordinates);
+            //Console.WriteLine(coordinates);
             // probably better to do this from the client
+          
+            float dx = float.Parse(coordinates.Split(":")[1], CultureInfo.InvariantCulture);
+            float dy = float.Parse(coordinates.Split(":")[2], CultureInfo.InvariantCulture);
 
-            float dx = (float)Double.Parse(coordinates.Split(":")[1]);
-            float dy = (float)Double.Parse(coordinates.Split(":")[2]);
+            float Xaceleration = 0.5f;
+            float Yaceleration = 0.4f;
 
-            float Xaceleration = 0.3f;
-            float Yaceleration = 0.2f;
-
-            int vx = (int)Math.Round(dx * Xaceleration,0);
-            int vy =  (int)Math.Round(dy * Yaceleration, 0);
-
+            int vx = (int)(dx * Xaceleration);
+            int vy =  (int)(dy * Yaceleration);
+            Console.WriteLine(dx + " " + dy);
             Sys32.SetCursorPos(pt.x + vx, pt.y + vy);
             
         }

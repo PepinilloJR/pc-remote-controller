@@ -284,8 +284,8 @@ namespace Controller
 
             // format of message: joystick:x:y
 
-            float dx = (float) Double.Parse(coordinates.Split(":")[1]); 
-            float dy = (float) Double.Parse(coordinates.Split(":")[2]); 
+            float dx = float.Parse(coordinates.Split(":")[1], CultureInfo.InvariantCulture); 
+            float dy = float.Parse(coordinates.Split(":")[2], CultureInfo.InvariantCulture); 
 
             float Xaceleration = 0.3f;
             float Yaceleration = 0.2f;
