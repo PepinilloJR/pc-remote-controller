@@ -2,6 +2,8 @@
 PC-REMOTE-CONTROLLER is a open-source project that offers a simple solution, to control your PC like you would do with a television.
 You can move the mouse, click, scroll, and even send keyboard inputs. 
 
+Is mostly a personal project that i use to watch movies on my couch
+
 ## Where can i get it?
 
 ### On your pc
