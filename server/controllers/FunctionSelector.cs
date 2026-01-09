@@ -8,7 +8,7 @@ namespace Controller
         {
             string[] messages = crude.TrimEnd('\r', '\n', '\0').Split('|');
             string message = messages[messages.Length - 1].ToLower();
-
+            Console.WriteLine("Received: " + message);
             if (message.Split("#").Length > 1)
             {
                 long currentTimeStamp = long.Parse(message.Split("#")[1]);
@@ -30,7 +30,7 @@ namespace Controller
 
             string message = parseMessage(message_);
 
-            Console.WriteLine("Received: " + message);
+            //Console.WriteLine("Received: " + message);
 
             if (message.Length == 1)
             {

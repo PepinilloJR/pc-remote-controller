@@ -14,7 +14,7 @@ export const sendMessage = (message) => {
 
 // messages buffer
 const messages = [];
-const timeStamp = 0;
+var timeStamp = 0;
 
 export let client;
 
