@@ -14,6 +14,7 @@ export const sendMessage = (message) => {
 
 // messages buffer
 const messages = [];
+const timeStamp = 0;
 
 export let client;
 
@@ -36,7 +37,14 @@ export async function startClient(options, setConnected) {
     const intervalSender = setInterval(() => {
       const m = messages.pop()
       if (m) {
-        client.write('|' + m)
+        
+        if (timeStamp === Number.MAX_SAFE_INTEGER) {
+          timeStamp = 0;
+        }
+        timeStamp += 1
+        
+        client.write('|' + m + "#" + timeStamp) 
+        
         clearTimeout(timeoutAlive)
 
         timeoutAlive = setTimeout(() => {

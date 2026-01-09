@@ -2,10 +2,26 @@ namespace Controller
 {
     public class FunctionSelector
     {
+        static long lastMessageTimeStamp = 0;
+
         public static string parseMessage(string crude)
         {
             string[] messages = crude.TrimEnd('\r', '\n', '\0').Split('|');
             string message = messages[messages.Length - 1].ToLower();
+
+            if (message.Split("#").Length > 1)
+            {
+                long currentTimeStamp = long.Parse(message.Split("#")[1]);
+
+                if (currentTimeStamp < lastMessageTimeStamp)
+                {
+                    return "Ignore";
+                }
+
+                lastMessageTimeStamp = currentTimeStamp;
+                message = message.Split("#")[0];
+            }
+
             return message;
         }
 
@@ -37,10 +53,14 @@ namespace Controller
             {
                 controller.JoyStickMoveMouse(message);
             }
+            else if (message.Contains("Ignore"))
+            {
+
+            }
             else
             {
                 //WindowsController.MoveMouse(mensaje);
-                controller.MoveMouse(message);
+                //controller.MoveMouse(message);
                 controller.ClickMouse(message);
                 //WindowsController.ClickMouse(mensaje);
             }
