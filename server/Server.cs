@@ -19,8 +19,6 @@ namespace ServerController
 
         private Socket client { get; set; }
 
-
-
         public Server() { }
 
         public Server(int port)
@@ -33,11 +31,11 @@ namespace ServerController
                     (ni.NetworkInterfaceType == NetworkInterfaceType.Ethernet || ni.NetworkInterfaceType == NetworkInterfaceType.Wireless80211)
                     &&
                     (ni.OperationalStatus == OperationalStatus.Up)
-                    && (!ni.Description.ToLower().Contains("radmin") && !ni.Description.ToLower().Contains("hamachi")) // añadir listado de adaptadores que podrian interferir con la busqueda de ip
+                    && (!ni.Description.ToLower().Contains("radmin") && !ni.Description.ToLower().Contains("hamachi")) // Add here any adapters that might interfere with the correct IP address
 
                     )
                 {
-                    // chequeo si es un tipo ipv4
+                    // here i can see if the ip is IPV4
                     foreach (UnicastIPAddressInformation uip in ni.GetIPProperties().UnicastAddresses)
                     {
                         if (uip.Address.AddressFamily == AddressFamily.InterNetwork)
@@ -93,20 +91,23 @@ namespace ServerController
 
             while (true)
             {
-                CancellationTokenSource tokenSourceTimeOut = new CancellationTokenSource();
 
-                CancellationToken tokenTimeOut = tokenSourceTimeOut.Token;
+                Task timeout = Task.Delay(10000);
+                Task<string> listen = receiver.listen(token);
 
-                Task timeout = Task.Run(() =>
+                var completed = await Task.WhenAny(timeout, listen);
+
+                if (completed == timeout)
                 {
-                    Task.Delay(10000, tokenTimeOut).Wait();
-                    if (tokenTimeOut.IsCancellationRequested) { return; }
-                    else { tokenSource.Cancel(); }
-                });
+                    tokenSource.Cancel();    
+                }
 
-                tokenSourceTimeOut.Cancel();
-                string message = await receiver.listen(token);
-                if (message == "") { tokenSource.Cancel(); }
+                string message = await listen;
+
+                if (string.IsNullOrEmpty(message))
+                {
+                    tokenSource.Cancel();
+                }
 
                 FunctionSelector.selectFunction(message, controller);
 

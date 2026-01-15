@@ -31,7 +31,7 @@ export async function startClient(options, setConnected) {
     console.log("connection created")
   });
 
-
+  
   client.on('connect', function () {
     setConnected(true)
     const intervalSender = setInterval(() => {

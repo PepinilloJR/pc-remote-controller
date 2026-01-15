@@ -67,7 +67,8 @@ export const interfaz = StyleSheet.create({
 
         backgroundColor: '#fff',
         width: '100%',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        margin: 5
     },
 
     texto: {
