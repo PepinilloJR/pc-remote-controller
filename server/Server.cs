@@ -89,6 +89,8 @@ namespace ServerController
         public async Task Receive(IControllerBase controller, Receiver receiver, CancellationTokenSource tokenSource, CancellationToken token)
         {
 
+            string messageAcumulator = "";
+
             while (true)
             {
 
@@ -99,7 +101,7 @@ namespace ServerController
 
                 if (completed == timeout)
                 {
-                    tokenSource.Cancel();    
+                    tokenSource.Cancel();
                 }
 
                 string message = await listen;
@@ -109,8 +111,18 @@ namespace ServerController
                     tokenSource.Cancel();
                 }
 
-                FunctionSelector.selectFunction(message, controller);
 
+                foreach (char i in message)
+                {
+                    messageAcumulator += i;
+                    if (i == ';')
+                    {
+                        FunctionSelector.selectFunction(messageAcumulator, controller);
+                        messageAcumulator = "";
+                    }
+                    
+                }
+                
             }
         }
 

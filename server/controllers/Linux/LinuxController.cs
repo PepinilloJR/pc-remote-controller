@@ -75,7 +75,6 @@ namespace Controller
         public void Close()
         {
             input.Close();
-            xdotool.WaitForExit(500);
             xdotool.Close();
             xdotool.Dispose();
 

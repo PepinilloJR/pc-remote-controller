@@ -43,7 +43,7 @@ export async function startClient(options, setConnected) {
         }
         timeStamp += 1
         
-        client.write('|' + m + "#" + timeStamp) 
+        client.write('|' + m + "#" + timeStamp + ";") 
         
         clearTimeout(timeoutAlive)
 

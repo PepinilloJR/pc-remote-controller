@@ -85,6 +85,10 @@ namespace main
                         server.Close();
                         cliente.Close();
                         cliente.Dispose();
+                        if (controller.getType() == "LinuxController")
+                        {
+                            ((LinuxController) controller).Close();
+                        }
 
                     }
                     catch (TaskCanceledException ex)
@@ -93,6 +97,11 @@ namespace main
                         server.Close();
                         cliente.Close();
                         cliente.Dispose();
+                        if (controller.getType() == "LinuxController")
+                        {
+                            ((LinuxController) controller).Close();
+                        }
+
                         break;
                     }
                     catch (Exception ex)
@@ -103,6 +112,11 @@ namespace main
                         server.Close();
                         cliente.Close();
                         cliente.Dispose();
+                        if (controller.getType() == "LinuxController")
+                        {
+                            ((LinuxController) controller).Close();
+                        }
+
                     }
 
                 }

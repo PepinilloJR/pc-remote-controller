@@ -8,6 +8,7 @@ namespace Controller
         {
             string[] messages = crude.TrimEnd('\r', '\n', '\0').Split('|');
             string message = messages[messages.Length - 1].ToLower();
+            message = message.Remove(message.Length - 1);
             Console.WriteLine("Received: " + message);
             if (message.Split("#").Length > 1)
             {
@@ -30,23 +31,18 @@ namespace Controller
 
             string message = parseMessage(message_);
 
-            //Console.WriteLine("Received: " + message);
-
             if (message.Length == 1)
             {
-                //Console.WriteLine(mensaje);
                 controller.WriteText(message);
-                //WindowsController.WriteText(mensaje.ToCharArray()[0]);
             }
             else if (message.Contains("special"))
             {
                 message = message.Replace("special", "").ToLower();
                 controller.WriteTextSpecial(message);
-                //WindowsController.WriteTextSpecial(mensaje);
             }
             else if (message.Contains("vol"))
             {
-                //WindowsController.VolumenChange(mensaje);
+
                 controller.VolumenChange(message);
             }
             else if (message.Contains("joystick"))
@@ -59,10 +55,7 @@ namespace Controller
             }
             else
             {
-                //WindowsController.MoveMouse(mensaje);
-                //controller.MoveMouse(message);
                 controller.ClickMouse(message);
-                //WindowsController.ClickMouse(mensaje);
             }
         }
     }

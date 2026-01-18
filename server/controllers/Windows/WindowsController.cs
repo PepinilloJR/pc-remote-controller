@@ -181,10 +181,6 @@ namespace Controller
             int vx = (int)(dx * Xaceleration);
             int vy = (int)(dy * Yaceleration);
 
-
-            //Sys32.SetCursorPos(pt.x + vx, pt.y + vy);
-            // using sendInput instead
-
             Sys32.INPUT mouseInput = new Sys32.INPUT();
             Sys32.INPUT[] inputs = { mouseInput };
             inputs[0].Type = 0;
